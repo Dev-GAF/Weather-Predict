@@ -30,49 +30,79 @@ async function shape()
 
     if (!data) return;
 
+    const todayDiv = document.getElementById("today");
+    const otherDaysDiv = document.getElementById("otherDays");
+
+    todayDiv.innerHTML = "";
+    otherDaysDiv.innerHTML = "";
+
+    todayDiv.style.display = "block";
+
     const forecastDays = data.forecast.forecastday;
+    
+    // ---------- TODAY ----------
+    const today = forecastDays[0];
 
-    const cityName = data.location.name;
+    // Name of City
+    const divCity = document.createElement("div");
 
-    const divWeather = document.createElement("div");
+    const titleCity = document.createElement("h1");
+    titleCity.textContent = data.location.name;
 
-    const title = document.createElement("h1");
-    title.textContent = cityName;
-    divWeather.appendChild(title);
+    divCity.appendChild(titleCity)
 
-    for (let i=0; i<forecastDays.length; i++)
-    {
-        const day = forecastDays[i];
+    // IMG and Temperature
+    const currentHour = new Date(data.location.localtime).getHours();
 
-        const dayContainer = document.createElement("div");
+    const hourDataNow = today.hour.find(h => {
+        const hour = new Date(h.time).getHours();
+        return hour === currentHour;
+    });
 
-        const pTempMax = document.createElement("p");
-        pTempMax.textContent = `Max Temp: ${day.day.maxtemp_c}°C`;
+    const currentForecast = hourDataNow || today.hour[0]
 
-        const pTempMin = document.createElement("p");
-        pTempMin.textContent = `Min Temp: ${day.day.mintemp_c}°C`;
+    const currentInfo = document.createElement("div");
+    currentInfo.id = "current-info";
 
-        const pHumidity = document.createElement("p");
-        pHumidity.textContent = `Humidity: ${day.day.avghumidity}%`;
+    const img = document.createElement("img");
+    img.src = `https:${currentForecast.condition.icon}`;
+    img.alt = currentForecast.condition.text;
 
-        const pFeelsLike = document.createElement("p");
-        pFeelsLike.textContent = `Feels Like: ${data.current.feelslike_c}°C`;
+    const temp = document.createElement("h1");
+    temp.id = "temperature";
+    temp.textContent = `${currentForecast.temp_c}°C`;
 
-        const pPressure = document.createElement("p");
-        pPressure.textContent = `Pressure: ${data.current.pressure_mb} hPa`;
+    currentInfo.appendChild(img);
+    currentInfo.appendChild(temp);
 
-        dayContainer.appendChild(pTempMax);
-        dayContainer.appendChild(pTempMin);
-        dayContainer.appendChild(pHumidity);
-        dayContainer.appendChild(pFeelsLike);
-        dayContainer.appendChild(pPressure);
+    const descriptionInfo = document.createElement("div");
 
-        divWeather.appendChild(dayContainer);
-    }
+    const description = document.createElement("p");
+    description.id = "description"
+    description.textContent = currentForecast.condition.text;
 
-    const main = document.querySelector("main");
-    main.innerHTML = ""; 
-    main.appendChild(divWeather);
+    descriptionInfo.appendChild(description);
+
+    const othersInfoClimate = document.createElement("div");
+    othersInfoClimate.id = "details"
+
+    const feelsLike = document.createElement("p");
+    feelsLike.textContent = `Feels Like: ${currentForecast.feelslike_c}°C`;
+
+    const humidity = document.createElement("p");
+    humidity.textContent = `Humidity: ${currentForecast.humidity}%`;
+
+    const pressure = document.createElement("p");
+    pressure.textContent = `Pressure: ${currentForecast.pressure_mb} hPa`;
+
+    othersInfoClimate.appendChild(feelsLike);
+    othersInfoClimate.appendChild(humidity);
+    othersInfoClimate.appendChild(pressure);
+
+    todayDiv.appendChild(divCity);
+    todayDiv.appendChild(currentInfo);
+    todayDiv.appendChild(descriptionInfo);
+    todayDiv.appendChild(othersInfoClimate);
 }
 
 
