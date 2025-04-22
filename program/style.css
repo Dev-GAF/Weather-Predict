@@ -7,14 +7,17 @@
 body {
     background-color: rgba(0, 132, 255, 0.759);
     font-family: Arial, Helvetica, sans-serif;
-    height: 100vh;
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
 }
+
+.container {
+    max-width: 900px;
+    width: 100%;
+}
+
 
 #title {
     color: white;
@@ -53,31 +56,43 @@ button:hover {
 }
 
 section {
-    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 20px 20px 0px 20px;
+    width: 100vw;
 }
 
 #today {
-    display: none;    
+    display: none;
+    background-color: rgba(255, 255, 255, 0.8);
     text-align: center;
-    width: 80vw;
+    width: 80%;
     border-radius: 10px;
-    padding: 20px;
-    margin: 20px 0;
+    padding: 30px;
+    margin: auto;
+    
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#today:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
 }
 
 #current-info {
     display: flex;
     align-items: center;
     justify-content: center;
+}
 
-    img {
-        width: 100px;
-    }
+#current-info img {
+    width: 100px;
 }
 
 #temperature {
     font-weight: bold;
     font-size: 2.5rem;
+    margin-left: 20px;
 }
 
 #description {
@@ -90,3 +105,37 @@ section {
     justify-content: space-around;
     margin-top: 40px;
 }
+
+#otherDays {
+    display: none;
+    justify-content: center;
+    gap: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    flex-wrap: wrap;
+    width: 40vw;
+    margin: auto;
+}
+
+#div-days {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#div-days:hover {
+    /* efeito flutuante ao passar o mouse */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+#others-temp {
+    margin: 10px 10px 0px 10px;
+}
+
+
