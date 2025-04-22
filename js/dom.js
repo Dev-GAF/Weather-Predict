@@ -1,32 +1,10 @@
-/**
- * Makes a request to get weather data for a city.
- * 
- * @param {string} city - City name.
- * @returns {Promise<Object|undefined>} Object containing API data or undefined for some error.
- */
-async function getDataAPI(city)
-{   
-    const URL = `https://purple-sun-34a4.assumpcaojeter.workers.dev/?cidade=${encodeURIComponent(city)}`;
-
-    try 
-    {
-        const response = await fetch(URL);
-        const data = await response.json();    
-
-        return data;
-    } 
-    catch (err) 
-    {
-        console.error("Error retrieving data. Check the name of city and try again", err);
-        return;
-    }
-}
+import { formatDate } from "./utils.js";
 
 /**
  * 
  * @returns {string} - City name.
  */
-function getCityInput() 
+export function getCityInput() 
 {
     return document.getElementById("city").value.trim();
 }
@@ -34,7 +12,7 @@ function getCityInput()
 /**
  * Clear the weather forecast display divs.
  */
-function clearDisplay() 
+export function clearDisplay() 
 {
     document.getElementById("today").innerHTML = "";
     document.getElementById("otherDays").innerHTML = "";
@@ -43,58 +21,10 @@ function clearDisplay()
 /**
  * Makes the divs that display the weather forecast visible.
  */
-function showElements() 
+export function showElements() 
 {
     document.getElementById("today").style.display = "block";
     document.getElementById("otherDays").style.display = "flex";
-}
-
-/**
- * @param {string} dataString - Date in "YYYY/MM/DD" format.
- * @returns {string} Date formatted with weekday abbreviation and day number.
- */
-function formatDate(dataString)
-{
-    const date = new Date(dataString + 'T00:00:00');
-    const weekDay = date.toLocaleDateString('pt-BR', { 
-        weekday: 'long'
-    });
-        
-    const nameDay = weekDay.split("-")[0].trim();
-
-    const shortenedDay = nameDay.slice(0, 3).toLowerCase();
-
-    const numberDay = date.getDate().toString().padStart(2, '0');
-
-    return `${shortenedDay}, ${numberDay}`;
-}
-
-/**
- * Main function: fetches city data, clears the screen, displays current and future data.
- */
-async function shape() 
-{
-    const city = getCityInput();
-
-    if (!city)
-    {
-        alert("Write the name of a city!");
-        return;
-    }
-
-    const data = await getDataAPI(city)
-    console.log(data);
-
-    if (!data || !data.forecast || !data.forecast.forecastday) {
-        alert("Invalid data returned from API.");
-        return;
-    }
-        
-    clearDisplay();
-    showElements();
-
-    renderToday(data);
-    renderOtherDays(data);
 }
 
 /**
@@ -102,7 +32,7 @@ async function shape()
  * 
  * @param {Object} data - Returns data from API.
  */
-function renderToday(data) 
+export function renderToday(data) 
 {
     const todayDiv = document.getElementById("today");
     const today = data.forecast.forecastday[0];
@@ -166,7 +96,7 @@ function renderToday(data)
  * 
  * @param {Object} data - Returns data from API.
  */
-function renderOtherDays(data) 
+export function renderOtherDays(data) 
 {
     const otherDaysDiv = document.getElementById("otherDays");
     const forecastDays = data.forecast.forecastday;
@@ -198,13 +128,3 @@ function renderOtherDays(data)
         otherDaysDiv.appendChild(divDays);
     }
 }
-
-/**
- * Allows the use of the "Enter" key in the city field to search for the forecast.
- */
-document.getElementById("city").addEventListener("keydown", function (event) {
-    if (event.key === "Enter") 
-        shape(); 
-});
-
-
