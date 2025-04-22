@@ -33,9 +33,14 @@ async function shape()
  * Allows the use of the "Enter" key in the city field to search for the forecast.
  */
 document.getElementById("city").addEventListener("keydown", function (event) {
-    if (event.key === "Enter") 
+    if (event.key === "Enter") {  
+        event.preventDefault();   
         shape(); 
+    }
 });
 
 // Click the Button
-document.querySelector("button").addEventListener("click", shape);
+document.getElementById('weather-form').addEventListener('submit', function (event) {
+    event.preventDefault();  
+    shape();  
+});
