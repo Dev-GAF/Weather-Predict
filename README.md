@@ -4,6 +4,13 @@ The Weather Program is a simple and interactive web application. You can search 
 
 The app uses data from a weather API and updates the screen in real time.
 
+<p align="center">
+  <a href="https://dev-gaf.github.io/Weather-Predict/" target="_blank">
+    <img src="https://img.shields.io/badge/🌐 Acessar%20Weather--Predict-blue?style=for-the-badge" alt="Acessar Weather-Predict" />
+  </a>
+</p>
+💻 This app is hosted for free on GitHub Pages.
+
 ## 🎯 Features
 
 - 🔎 Live City Search: Type the name of a city and get the weather instantly.
