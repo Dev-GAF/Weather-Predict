@@ -103,6 +103,7 @@ export function renderOtherDays(data)
 
     const subTitle = document.createElement("h1");
     subTitle.textContent = "Previsão para os próximos 2 dias";
+    subTitle.id = "title-others-weathers"
     otherDaysDiv.appendChild(subTitle);
 
     for (let i = 1; i<forecastDays.length; i++) 
