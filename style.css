@@ -13,12 +13,6 @@ body {
     justify-content: center;
 }
 
-.container {
-    max-width: 900px;
-    width: 100%;
-}
-
-
 #title {
     color: white;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -144,6 +138,55 @@ section {
 
 #others-temp {
     margin: 10px 10px 0px 10px;
+}
+
+@media (max-width: 720px) 
+{
+    body {
+        padding: 20px 10px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    input {
+        max-width: none;
+        margin-bottom: 10px;
+    }
+
+    #current-info {
+        flex-direction: column;
+    }
+
+    #temperature {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    #details {
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+    }
+
+    #today {
+        width: 100%;
+        padding: 20px;
+    }
+
+    #otherDays {
+        width: 100%;
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    #div-days {
+        width: 100%;
+    }
+
+    #title-others-weathers {
+        width: 100%;
+        font-size: 1.2rem;
+    }
 }
 
 
