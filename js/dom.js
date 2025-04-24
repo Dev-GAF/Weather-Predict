@@ -35,59 +35,59 @@ export function showElements()
 export function renderToday(data) 
 {
     const todayDiv = document.getElementById("today");
-    const today = data.forecast.forecastday[0];
-    const currentTime = new Date(data.location.localtime);
 
-    const cityTitle = document.createElement("h1");
-    cityTitle.textContent = data.location.name;
-    todayDiv.appendChild(cityTitle);
+    const now = new Date();
+    const todayList = data.list; 
 
-    let closestHourData = today.hour[0];
-    let closestDiff = Math.abs(currentTime - new Date(closestHourData.time));
+    let closest = todayList[0];
+    let minDiff = Math.abs(now - new Date(closest.dt_txt));
 
-    for (let i = 1; i<today.hour.length; i++) 
+    for (const forecast of todayList) 
     {
-        const hourTime = new Date(today.hour[i].time);
-        const diff = Math.abs(currentTime - hourTime);
-        if (diff < closestDiff) 
+        const forecastTime = new Date(forecast.dt_txt);
+        const diff = Math.abs(now - forecastTime);
+        if (diff < minDiff) 
         {
-            closestDiff = diff;
-            closestHourData = today.hour[i];
+            minDiff = diff;
+            closest = forecast;
         }
     }
+
+    const cityTitle = document.createElement("h1");
+    cityTitle.textContent = data.city.name;
+    todayDiv.appendChild(cityTitle);
 
     const currentInfo = document.createElement("div");
     currentInfo.id = "current-info";
 
     const imgToday = document.createElement("img");
-    imgToday.src = `https:${closestHourData.condition.icon}`;
-    imgToday.alt = closestHourData.condition.text;
+    imgToday.src = `https://openweathermap.org/img/wn/${closest.weather[0].icon}@2x.png`;
+    imgToday.alt = closest.weather[0].description;
 
     const temp = document.createElement("h1");
     temp.id = "temperature";
-    temp.textContent = `${Math.round(closestHourData.temp_c)}°C`;
+    temp.textContent = `${Math.round(closest.main.temp)}°C`;
 
     currentInfo.appendChild(imgToday);
     currentInfo.appendChild(temp);
 
     const description = document.createElement("p");
     description.id = "description";
-    description.textContent = closestHourData.condition.text;
+    description.textContent = closest.weather[0].description;
 
     const othersInfoClimate = document.createElement("div");
     othersInfoClimate.id = "details";
 
     const feelsLike = document.createElement("p");
-    feelsLike.textContent = `Sensação térmica: ${Math.round(closestHourData.feelslike_c)}°C`;
+    feelsLike.textContent = `Sensação térmica: ${Math.round(closest.main.feels_like)}°C`;
 
     const humidity = document.createElement("p");
-    humidity.textContent = `Umidade: ${closestHourData.humidity}%`;
+    humidity.textContent = `Umidade: ${closest.main.humidity}%`;
 
     const pressure = document.createElement("p");
-    pressure.textContent = `Pressão: ${closestHourData.pressure_mb} hPa`;
+    pressure.textContent = `Pressão: ${closest.main.pressure} hPa`;
 
     othersInfoClimate.append(feelsLike, humidity, pressure);
-
     todayDiv.append(currentInfo, description, othersInfoClimate);
 }
 
@@ -99,33 +99,62 @@ export function renderToday(data)
 export function renderOtherDays(data) 
 {
     const otherDaysDiv = document.getElementById("otherDays");
-    const forecastDays = data.forecast.forecastday;
+    const todayList = data.list; 
 
     const subTitle = document.createElement("h1");
-    subTitle.textContent = "Previsão para os próximos 2 dias";
-    subTitle.id = "title-others-weathers"
+    subTitle.textContent = "Previsão para os próximos 4 dias";
+    subTitle.id = "title-others-weathers";
     otherDaysDiv.appendChild(subTitle);
 
-    for (let i = 1; i<forecastDays.length; i++) 
-    {
+    const forecastsByDay = {};
+
+    todayList.forEach(forecast => {
+        const date = new Date(forecast.dt_txt);
+        const day = date.toISOString().split('T')[0]; 
+
+        if (!forecastsByDay[day]) 
+        {
+            forecastsByDay[day] = {
+                maxTemp: forecast.main.temp_max,
+                minTemp: forecast.main.temp_min,
+                description: forecast.weather[0].description,
+                icon: forecast.weather[0].icon,
+            };
+        } 
+        else
+        {
+            forecastsByDay[day].maxTemp = Math.max(forecastsByDay[day].maxTemp, forecast.main.temp_max);
+            forecastsByDay[day].minTemp = Math.min(forecastsByDay[day].minTemp, forecast.main.temp_min);
+        }
+    });
+
+    const today = new Date().toISOString().split('T')[0];  
+    const days = Object.keys(forecastsByDay)
+        .filter(day => day !== today)  
+        .slice(0, 4);  
+
+    days.forEach(day => {
         const divDays = document.createElement("div");
         divDays.id = "div-days";
 
+        const date = new Date(day);
+        const formattedDate = formatDate(day);  
+
         const dayWeek = document.createElement("p");
-        dayWeek.textContent = formatDate(forecastDays[i].date);
+        dayWeek.textContent = formattedDate;
 
         const img = document.createElement("img");
-        img.src = `https:${forecastDays[i].day.condition.icon}`;
-        img.alt = forecastDays[i].day.condition.text;
+        img.src = `https://openweathermap.org/img/wn/${forecastsByDay[day].icon}@2x.png`;
+        img.alt = forecastsByDay[day].description;
 
         const tempText = document.createElement("p");
-        tempText.textContent = `${Math.round(forecastDays[i].day.maxtemp_c)}°C / ${Math.round(forecastDays[i].day.mintemp_c)}°C`;
+        tempText.textContent = `${Math.round(forecastsByDay[day].maxTemp)}°C / ${Math.round(forecastsByDay[day].minTemp)}°C`;
 
         const desc = document.createElement("p");
-        desc.textContent = forecastDays[i].day.condition.text;
+        desc.textContent = forecastsByDay[day].description;
         desc.id = "others-temp";
 
         divDays.append(dayWeek, img, tempText, desc);
         otherDaysDiv.appendChild(divDays);
-    }
+    });
 }

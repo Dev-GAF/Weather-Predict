@@ -6,12 +6,17 @@
  */
 export async function getDataAPI(city)
 {   
-    const URL = `https://purple-sun-34a4.assumpcaojeter.workers.dev/?cidade=${encodeURIComponent(city)}`;
+    const URL = `https://purple-sun-34a4.assumpcaojeter.workers.dev/?cidade=${encodeURIComponent(city)}&lang=pt_br&units=metric`;
 
     try 
     {
         const response = await fetch(URL);
+
+        if (!response.ok)
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+
         const data = await response.json();    
+        console.log(data);
 
         return data;
     } 

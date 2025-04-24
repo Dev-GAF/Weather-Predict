@@ -9,24 +9,25 @@ async function shape()
 {
     const city = getCityInput();
 
-    if (!city)
+    if (!city) 
     {
         alert("Write the name of a city!");
         return;
     }
 
-    const data = await getDataAPI(city)
+    const data = await getDataAPI(city);
 
-    if (!data || !data.forecast || !data.forecast.forecastday) {
+    if (!data || !data.list || !data.city) 
+    {
         alert("Invalid data returned from API.");
         return;
     }
-        
+
     clearDisplay();
     showElements();
 
-    renderToday(data);
-    renderOtherDays(data);
+    renderToday(data); 
+    renderOtherDays(data); 
 }
 
 /**
